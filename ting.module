@@ -677,27 +677,28 @@ function ting_collection_view($object, $view_mode = 'full', $langcode = NULL) {
 }
 
 /**
- * Sorts the objects according to type and language, but maintains the order
- * of types and languages in the original array.
+ * Sorts the objects according to type and date, but maintains the order
+ * of types and date in the original array.
  */
-function _ting_type_lang_sort($objects, &$return_types) {
+function _ting_type_date_sort($objects, &$return_types) {
   $types = array();
-  $language = array();
+  $dates = array();
   $sorted = array();
   // Sort the objects into type buckets containing language buckets.
   foreach ($objects as $object) {
     // We're using keys so we don't have to uniq its afterwards.
     $types[$object->type] = TRUE;
-    $languages[$object->language] = TRUE;
-    $buckets[$object->type][$object->language][] = $object;
+    $dates[$object->getDate()] = TRUE;
+    $buckets[$object->type][$object->getDate()][] = $object;
   }
 
+  ksort($dates);
   $return_types = array_keys($types);
   // Now flatten the buckets into a flat array.
   foreach ($return_types as $type) {
-    foreach (array_keys($languages) as $language) {
-      if (isset($buckets[$type][$language])) {
-        $sorted = array_merge($sorted, $buckets[$type][$language]);
+    foreach (array_keys($dates) as $date) {
+      if (isset($buckets[$type][$date])) {
+        $sorted = array_merge($sorted, $buckets[$type][$date]);
       }
     }
   }
