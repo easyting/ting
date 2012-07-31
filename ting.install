@@ -157,7 +157,6 @@ function ting_ding_entity_fields() {
         'label' => t('Ting object subjects'),
       ),
     ),
-
     'ting_primary_object' => array(
       'field' => array(
         'locked' => TRUE,

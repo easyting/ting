@@ -59,7 +59,7 @@ function ting_get_object($object_id, $collection = FALSE) {
 
       $profile = variable_get('ting_search_profile', '');
       if (!empty($profile) && method_exists($request, 'setProfile')) {
-	$request->setProfile($profile);
+        $request->setProfile($profile);
       }
 
       $request->setAllObjects(false);
@@ -218,7 +218,10 @@ function ting_do_search($query, $page = 1, $results_per_page = 10, $options = ar
         'weight' => 1,
       );
 
-      $request->userDefinedRanking = array('tieValue' => 0.1, 'rankField' => $fields);
+      $request->userDefinedRanking = array(
+        'tieValue' => 0.1,
+        'rankField' => $fields,
+      );
     }
   }
   // Otherwise, use the ranking setting.
@@ -433,7 +436,8 @@ function ting_execute($request) {
     $res = ting_get_client()->execute($request);
     timer_stop('ting');
     return $res;
-  } catch (TingClientException $e) {
+  }
+  catch (TingClientException $e) {
     timer_stop('ting');
     watchdog('ting client', 'Error performing request: ' . $e->getMessage(), NULL, WATCHDOG_ERROR, 'http://' . $_SERVER["HTTP_HOST"] . request_uri());
     return FALSE;

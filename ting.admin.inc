@@ -203,7 +203,7 @@ function ting_admin_ranking_add_more_js($form, &$form_state) {
 function ting_admin_ranking_form_after_build($form, &$form_state) {
   $path = drupal_get_path('module', 'ting');
 
-  drupal_add_css($path .'/css/ting_admin_ranking_form.css');
+  drupal_add_css($path . '/css/ting_admin_ranking_form.css');
 
   return $form;
 }
@@ -234,7 +234,7 @@ function _ting_ranking_field_filter($element) {
  */
 function _ting_ranking_field_sort($a, $b) {
   if ($a['weight'] == $b['weight']) {
-      return 0;
+    return 0;
   }
   return ($a['weight'] > $b['weight']) ? -1 : 1;
 }
@@ -322,7 +322,7 @@ function ting_admin_boost_add_more_js($form, &$form_state) {
 function ting_admin_boost_form_after_build($form, &$form_state) {
   $path = drupal_get_path('module', 'ting');
 
-  drupal_add_css($path .'/css/ting_admin_boost_form.css');
+  drupal_add_css($path . '/css/ting_admin_boost_form.css');
 
   return $form;
 }
@@ -351,7 +351,7 @@ function _ting_boost_field_filter($element) {
  */
 function _ting_boost_field_sort($a, $b) {
   if ($a['weight'] == $b['weight']) {
-      return 0;
+    return 0;
   }
   return ($a['weight'] > $b['weight']) ? -1 : 1;
 }
@@ -367,7 +367,7 @@ function ting_admin_register_settings() {
     '#type' => 'textfield',
     '#title' => t('Serie title'),
     '#description' => t('Specify the register to be used for searching against serie titles.'),
-    '#default_value' => variable_get('ting_admin_register_serie_title', 'bib.titleSeries')
+    '#default_value' => variable_get('ting_admin_register_serie_title', 'bib.titleSeries'),
   );
 
   $form['#submit'][] = 'ting_search_extendform_admin_settings_submit';
@@ -403,7 +403,7 @@ function ting_admin_online_url_settings($form_state) {
   $form['update'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update from datawell'),
-    '#description' => t('Update the list of known types by asking the datawell for all types.')
+    '#description' => t('Update the list of known types by asking the datawell for all types.'),
   );
 
   $form['update']['update'] = array(
@@ -471,7 +471,7 @@ function ting_admin_reservable_settings($form_state) {
   $form['update'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update from datawell'),
-    '#description' => t('Update the lists of known types and sources by asking the datawell for all types and sorces.')
+    '#description' => t('Update the lists of known types and sources by asking the datawell for all types and sorces.'),
   );
 
   $form['update']['update'] = array(
@@ -504,7 +504,10 @@ function ting_admin_reservable_settings($form_state) {
     '#default_value' => variable_get('ting_reservable_types', _ting_default_reservable_types()),
   );
   // Save us the trouble of running array_filter.
-  $form['array_filter'] = array('#type' => 'value', '#value' => TRUE);
+  $form['array_filter'] = array(
+    '#type' => 'value',
+    '#value' => TRUE,
+  );
 
   return system_settings_form($form);
 }

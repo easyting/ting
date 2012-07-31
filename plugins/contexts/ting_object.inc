@@ -1,18 +1,18 @@
 <?php
 
 $plugin = array(
-    'title' => t('Ting object'),
-    'description' => t('An object from the Ting database – books, CD-ROMs, magazines, etc.'),
-    'context' => 'ting_ting_object_create',
-    'settings form' => 'ting_ting_object_context_settings_form',
-    'keyword' => 'ting_object',
-    'context name' => 'ting_object',
-    'convert list' => 'ting_ting_object_convert_list',
-    'convert' => 'ting_ting_object_convert',
-    'placeholder form' => array(
-      '#type' => 'textfield',
-      '#description' => t('Enter the object ID for this context'),
-    ),
+  'title' => t('Ting object'),
+  'description' => t('An object from the Ting database – books, CD-ROMs, magazines, etc.'),
+  'context' => 'ting_ting_object_create',
+  'settings form' => 'ting_ting_object_context_settings_form',
+  'keyword' => 'ting_object',
+  'context name' => 'ting_object',
+  'convert list' => 'ting_ting_object_convert_list',
+  'convert' => 'ting_ting_object_convert',
+  'placeholder form' => array(
+    '#type' => 'textfield',
+    '#description' => t('Enter the object ID for this context'),
+  ),
 );
 
 /**
