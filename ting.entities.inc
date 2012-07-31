@@ -272,7 +272,7 @@ class TingCollection extends DingEntityCollection {
       // Can't pass overloaded $this->types as reference to
       // _ting_type_lang_sort(), so we're using a temporary var.
       $types_tmp = array();
-      $this->entities = _ting_type_lang_sort($entities, $types_tmp);
+      $this->entities = _ting_type_date_sort($entities, $types_tmp);
       $this->types = $types_tmp;
     }
     return $this->entities;
