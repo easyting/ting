@@ -24,9 +24,9 @@ class TingEntityTestCase extends DrupalWebTestCase {
     variable_set('ting_search_profile', 'opac');
   }
 
- /**
-  * Test that getting a ting object works.
-  */
+  /**
+   * Test that getting a ting object works.
+   */
   function testTingEntity() {
     $exists = module_exists('ding_entity');
     // Bit of sanity checking.
@@ -73,8 +73,8 @@ class TingEntityTestCase extends DrupalWebTestCase {
   }
 
   /**
-  * Test that getting a ting collection works.
-  */
+   * Test that getting a ting collection works.
+   */
   function testTingCollectionEntity() {
     $type = ding_entity_info('ding_entity_collection');
 
@@ -92,7 +92,7 @@ class TingEntityTestCase extends DrupalWebTestCase {
       $all_entities = $all_entities && (get_class($sub_entity) == 'TingEntity');
       $entities[$sub_entity->id] = $sub_entity;
     }
-    $expected_ids = array (
+    $expected_ids = array(
       '100200:22252852',
       '100200:22513354',
       '100200:22629344',
@@ -116,7 +116,7 @@ class TingEntityTestCase extends DrupalWebTestCase {
     $this->assertEqual($entities['100200:23195151']->language, 'Dansk', 'Entity language OK.');
     $subjects = $entities['100200:23195151']->subjects;
     sort($subjects);
-    $this->assertEqual($subjects, array('eventyrlige fortællinger', 'magi', 'troldmænd' ), 'Entity subjects OK.');
+    $this->assertEqual($subjects, array('eventyrlige fortællinger', 'magi', 'troldmænd'), 'Entity subjects OK.');
 
     $this->assertEqual($entities['100200:24168638']->title, 'Harry Potter og De Vises Sten', 'Entity title OK.');
     $this->assertEqual($entities['100200:24168638']->provider_id, '24168638', 'Entity provider_id OK.');

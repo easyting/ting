@@ -24,7 +24,7 @@ function ting_ctools_plugin_api($module, $api) {
  * where our task and task_handler plugins are.
  */
 function ting_ctools_plugin_directory($owner, $plugin_type) {
-    return 'plugins/' . $plugin_type;
+  return 'plugins/' . $plugin_type;
 }
 
 /**
@@ -84,7 +84,7 @@ function ting_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ting_admin_ting_settings'),
     'access arguments' => array('administer ting settings'),
-    'file' => 'ting.admin.inc'
+    'file' => 'ting.admin.inc',
   );
 
   $items['admin/config/ting/ranking'] = array(
@@ -111,7 +111,7 @@ function ting_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ting_admin_register_settings'),
     'access arguments' => array('administer ting settings'),
-    'file' => 'ting.admin.inc'
+    'file' => 'ting.admin.inc',
   );
 
   $items['admin/config/ting/online_url'] = array(
@@ -120,7 +120,7 @@ function ting_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ting_admin_online_url_settings'),
     'access arguments' => array('administer ting settings'),
-    'file' => 'ting.admin.inc'
+    'file' => 'ting.admin.inc',
   );
 
   $items['admin/config/ting/reservable'] = array(
@@ -129,7 +129,7 @@ function ting_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ting_admin_reservable_settings'),
     'access arguments' => array('administer ting settings'),
-    'file' => 'ting.admin.inc'
+    'file' => 'ting.admin.inc',
   );
 
   return $items;
@@ -223,16 +223,16 @@ function ting_block_info() {
  * helper function - get relations for an ting_entity as an array ([$type] => array($relations))
  */
 function ting_get_relations($ting_entity) {
-  foreach( $ting_entity->relations as $relation ) {
+  foreach ( $ting_entity->relations as $relation ) {
     $relations[$relation->type][] = $relation;
   }
 
   // get references from ting_reference
-  if( module_exists('ting_reference') ) {
-    $refs = module_invoke('ting_reference','get_relations','ting_object',$ting_entity);
-    if( !empty($refs) ) {
-      foreach( $refs as $ref ) {
-  $relations[$ref->relation_type][] = $ref;
+  if ( module_exists('ting_reference') ) {
+    $refs = module_invoke('ting_reference', 'get_relations', 'ting_object', $ting_entity);
+    if ( !empty($refs) ) {
+      foreach ( $refs as $ref ) {
+        $relations[$ref->relation_type][] = $ref;
       }
     }
   }
@@ -247,7 +247,7 @@ function ting_block_view($delta = '') {
   switch ($delta) {
     case 'ting_relation_anchors':
       $items = array();
-      if( $object = menu_get_object('ting_object',2) ) {
+      if ( $object = menu_get_object('ting_object', 2) ) {
         $relations = ting_get_relations($object);
         $relation_types = module_invoke_all('anchor_info');
         $block['subject'] = array(
@@ -257,16 +257,16 @@ function ting_block_view($delta = '') {
         );
         $block['subject'] = render($block['subject']);
 
-        foreach( $relations as $key => $relation ) {
-          if( isset($relation_types[$key]) ) {
-            $items[] = l($relation_types[$key].' ('.count($relation).') ','#'.$key,array('external'=>TRUE));
+        foreach ( $relations as $key => $relation ) {
+          if ( isset($relation_types[$key]) ) {
+            $items[] = l($relation_types[$key] . ' (' . count($relation) . ') ', '#' . $key, array('external' => TRUE));
           }
         }
         $block['content'] =
           array(
           '#theme' => 'item_list',
           '#items' => $items,
-          );
+        );
       }
       break;
     case 'ting_collection_types':
@@ -279,7 +279,7 @@ function ting_block_view($delta = '') {
         $block['subject'] = render($block['subject']);
         $items = array();
         foreach ($collection->types as $type) {
-          $items[] = l($type . ' (' . $collection->types_count[$type] . ')', '#' . $type, array('external' => TRUE ));
+          $items[] = l($type . ' (' . $collection->types_count[$type] . ')', '#' . $type, array('external' => TRUE));
         }
         $block['content'] = array(
           '#theme' => 'item_list',
@@ -348,7 +348,6 @@ function ting_theme() {
     'ting_ranking_field' => array(
       'arguments' => array('element' => NULL),
     ),
-
   );
 }
 
@@ -363,7 +362,7 @@ function ting_ding_devel_timers() {
     'ting_net' => array(
       'title' => 'Ting net time was @time ms.',
       'include in total' => FALSE,
-    )
+    ),
   );
 }
 
@@ -406,7 +405,6 @@ function ting_entity_info() {
         ),
       ),
     ),
-
     'ting_collection' => array(
       'label' => t('Ting collection'),
       'controller class' => 'TingCollectionController',
@@ -488,7 +486,7 @@ function ting_ding_entity_is($object, $class) {
   elseif ($class == 'periodical') {
     // @todo make this configurable.
     // @todo also make sure that availability information isn't displayed
-    //   on the object
+//   on the object
     return in_array(drupal_strtolower($object->type), array('tidsskrift', 'periodikum', 'årbog'));
   }
 }
@@ -506,7 +504,7 @@ function ting_ding_entity_buttons($type, $entity) {
         '#prefix' => '<p class="ding-entity-button">',
         '#suffix' => '</p>',
         '#type' => 'markup',
-        '#markup' => l($label, $entity->online_url, array('attributes'=>array('target'=>'_new')))
+        '#markup' => l($label, $entity->online_url, array('attributes' => array('target' => '_new'))),
       ),
     );
   }
@@ -766,9 +764,9 @@ function ting_boost_field_element_process($element, $form_state) {
 }
 
 function boost_weight_validate($element, &$form_state) {
-   if ( !empty($element['#value']) && ($element['#value'] != (string)(int)$element['#value']) ) {
-     form_error($element, t('Boost weight is an integer.'));
-   }
+  if ( !empty($element['#value']) && ($element['#value'] != (string) (int) $element['#value']) ) {
+    form_error($element, t('Boost weight is an integer.'));
+  }
 }
 
 /**

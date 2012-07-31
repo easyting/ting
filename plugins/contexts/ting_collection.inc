@@ -1,18 +1,18 @@
 <?php
 
 $plugin = array(
-    'title' => t('Ting collection'),
-    'description' => t('An collection from the Ting database – books, CD-ROMs, magazines, etc.'),
-    'context' => 'ting_ting_collection_create',
-    'settings form' => 'ting_ting_collection_context_settings_form',
-    'keyword' => 'ting_collection',
-    'context name' => 'ting_collection',
-    'convert list' => 'ting_ting_collection_convert_list',
-    'convert' => 'ting_ting_collection_convert',
-    'placeholder form' => array(
-      '#type' => 'textfield',
-      '#description' => t('Enter the collection ID for this context'),
-    ),
+  'title' => t('Ting collection'),
+  'description' => t('An collection from the Ting database – books, CD-ROMs, magazines, etc.'),
+  'context' => 'ting_ting_collection_create',
+  'settings form' => 'ting_ting_collection_context_settings_form',
+  'keyword' => 'ting_collection',
+  'context name' => 'ting_collection',
+  'convert list' => 'ting_ting_collection_convert_list',
+  'convert' => 'ting_ting_collection_convert',
+  'placeholder form' => array(
+    '#type' => 'textfield',
+    '#description' => t('Enter the collection ID for this context'),
+  ),
 );
 
 /**

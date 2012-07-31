@@ -232,7 +232,7 @@ function ting_field_formatter_settings_form($field, $instance, $view_mode, $form
         '#default_value' => $settings['view_mode'],
         '#options' => $view_modes,
       );
-    break;
+      break;
   }
 
   return $element;
@@ -303,11 +303,11 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
          */
         $type = 'ting_object';
         if ($display['settings']['link_type'] == 'collection') {
-        //   // Check if the cache contains an collection for this id.
-        //   $x = ting_cache_get($entity->id);
-        //   if ($x instanceof TingClientObjectCollection) {
-            $type = 'ting_collection';
-        //   }
+//   // Check if the cache contains an collection for this id.
+//   $x = ting_cache_get($entity->id);
+//   if ($x instanceof TingClientObjectCollection) {
+          $type = 'ting_collection';
+//   }
         }
         if ($display['settings']['link_type'] != 'none') {
           $url = entity_uri($type, $entity);
@@ -329,7 +329,7 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
             array(
               'data' => $entity->type,
               'class' => array(drupal_html_class($entity->type)),
-            )
+            ),
           ),
         );
         break;
@@ -357,7 +357,7 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
             $markup_string = t('By !author_link (@year)', array(
               '!author_link' => implode(', ', $creators),
               '@year' => $entity->date, // So wrong, but appears to
-                                        // be the way the data is.
+              // be the way the data is.
             ));
           }
           else {
@@ -366,9 +366,9 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
             ));
           }
         }
-	elseif($entity->date != '') {
-	  $markup_string = t('(@year)', array('@year'=>$entity->date));
-	}
+        elseif ($entity->date != '') {
+          $markup_string = t('(@year)', array('@year' => $entity->date));
+        }
         $element[$delta] = array(
           '#markup' => $markup_string,
         );

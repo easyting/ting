@@ -101,7 +101,7 @@ class TingObjectController extends DrupalDefaultEntityController {
     if (sizeof($unknown)) {
       $new_ids = array();
       foreach ($unknown as $ding_entity_id) {
-        if (isset($objects[$ding_entity_id])){
+        if (isset($objects[$ding_entity_id])) {
           // Insert a new local proxy row.
           $ting_object = array(
             'ding_entity_id' => $ding_entity_id,
@@ -195,7 +195,8 @@ class TingObjectController extends DrupalDefaultEntityController {
         if ($diffs) {
           if (array_keys($diffs) != array('ding_entity_id') || !in_array($entity_values['ding_entity_id'], $diffs['ding_entity_id'])) {
             unset($entities[$entity->{$this->idKey}]);
-          }}
+          }
+        }
       }
     }
     return $entities;
