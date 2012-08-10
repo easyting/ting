@@ -9,7 +9,8 @@
  * - $object: The TingClientObject instance we're rendering.
  * - $content: Render array of content.
  */
+$class = count($object->entities) > 1 ? 'ding-entity-collection' : 'ding-entity';
 ?>
-<div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
+<div class="<?php print $classes; ?> clearfix type-<?php print $class;?>"<?php print $attributes; ?>>
     <?php echo render($content); ?>
 </div>
