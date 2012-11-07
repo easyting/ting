@@ -68,7 +68,7 @@ class TingEntity extends DingEntity {
         return $dk5_text;
       }
       else {
-        return $dk5_text . ' (' . $dk5 . ')';
+        return $dk5 . ' ' . $dk5_text;
       }
     }
 
