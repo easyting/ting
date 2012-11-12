@@ -223,7 +223,12 @@ function ting_block_info() {
  * helper function - get relations for an ting_entity as an array ([$type] => array($relations))
  */
 function ting_get_relations($ting_entity) {
-  foreach ( $ting_entity->relations as $relation ) {
+  foreach ( $ting_entity->relations as $k => $relation ) {
+    // @todo
+    // Maybe a more graceful implementation, using BE.
+    if ($k == 'dbcaddi:hasOpenUrl' || $k == 'dbcaddi:hasOnlineAccess') {
+      continue;
+    }
     $relations[$relation->type][] = $relation;
   }
 
@@ -256,17 +261,19 @@ function ting_block_view($delta = '') {
           '#suffix' => '</div>',
         );
         $block['subject'] = render($block['subject']);
-
-        foreach ( $relations as $key => $relation ) {
-          if ( isset($relation_types[$key]) ) {
-            $items[] = l($relation_types[$key] . ' (' . count($relation) . ') ', '#' . $key, array('external' => TRUE));
+        
+        if (is_array($relations) && count($relations) > 0) {
+          foreach ( $relations as $key => $relation ) {
+            if ( isset($relation_types[$key]) ) {
+              $items[] = l($relation_types[$key] . ' (' . count($relation) . ') ', '#' . $key, array('external' => TRUE));
+            }
           }
+          $block['content'] =
+            array(
+            '#theme' => 'item_list',
+            '#items' => $items,
+          );
         }
-        $block['content'] =
-          array(
-          '#theme' => 'item_list',
-          '#items' => $items,
-        );
       }
       break;
     case 'ting_collection_types':
