@@ -223,10 +223,10 @@ function ting_block_info() {
  * helper function - get relations for an ting_entity as an array ([$type] => array($relations))
  */
 function ting_get_relations($ting_entity) {
-  foreach ( $ting_entity->relations as $k => $relation ) {
+  foreach ($ting_entity->relations as $k => $relation ) {
     // @todo
     // Maybe a more graceful implementation, using BE.
-    if ($k == 'dbcaddi:hasOpenUrl' || $k == 'dbcaddi:hasOnlineAccess') {
+    if ($relation->type == 'dbcaddi:hasOpenUrl' || $relation->type == 'dbcaddi:hasOnlineAccess') {
       continue;
     }
     $relations[$relation->type][] = $relation;
@@ -261,7 +261,7 @@ function ting_block_view($delta = '') {
           '#suffix' => '</div>',
         );
         $block['subject'] = render($block['subject']);
-        
+
         if (is_array($relations) && count($relations) > 0) {
           foreach ( $relations as $key => $relation ) {
             if ( isset($relation_types[$key]) ) {
@@ -495,25 +495,6 @@ function ting_ding_entity_is($object, $class) {
     // @todo also make sure that availability information isn't displayed
 //   on the object
     return in_array(drupal_strtolower($object->type), array('tidsskrift', 'periodikum', 'årbog'));
-  }
-}
-
-/**
- * Implements hook_ding_entity_buttons()
- */
-function ting_ding_entity_buttons($type, $entity) {
-  if ($entity instanceof TingEntity && $entity->online_url) {
-    $settings = variable_get('ting_url_labels', _ting_default_url_labels());
-    $type = drupal_strtolower($entity->type);
-    $label = isset($settings[$type]) && $settings[$type] ? $settings[$type] : $settings['_default'];
-    return array(
-      array(
-        '#prefix' => '<p class="ding-entity-button">',
-        '#suffix' => '</p>',
-        '#type' => 'markup',
-        '#markup' => l($label, $entity->online_url, array('attributes' => array('target' => '_new'))),
-      ),
-    );
   }
 }
 
