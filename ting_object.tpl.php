@@ -6,10 +6,10 @@
  * Template to render objects from the Ting database.
  *
  * Available variables:
- * - $object: The TingClientObject instance we're rendering.
+ * - $object: The TingEntity or TingCollection instance we're rendering.
  * - $content: Render array of content.
  */
-$class = count($object->entities) > 1 ? 'ding-entity-collection' : 'ding-entity';
+$class = isset($object->entities) && count($object->entities) > 1 ? 'ding-entity-collection' : 'ding-entity';
 ?>
 <div class="<?php print $classes; ?> clearfix type-<?php print $class;?>"<?php print $attributes; ?>>
     <?php echo render($content); ?>
