@@ -18,9 +18,16 @@ function template_preprocess_ting_object(&$variables) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 
-  if ( isset($variables['content']['entities']) ) {
-    foreach ( $variables['content']['entities'] as $key => $val ) {
+  if (isset($variables['content']['entities'])) {
+    foreach ($variables['content']['entities'] as $key => $val) {
       $variables['content']['overview']['types'][] = $key;
+    }
+  }
+
+  // Disable entity buttons for collection items.
+  if (is_object($variables['object']) && $variables['object'] instanceof TingCollection) {
+    if (count($variables['object']->getEntities()) > 1) {
+      unset($variables['content']['ting_primary_object'][0]['ding_entity_buttons']);
     }
   }
 }
