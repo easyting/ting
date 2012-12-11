@@ -337,7 +337,7 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
         if ($entity->serieTitle) {
           $element[$delta] = array(
             // should use phrase.title instead of dc.title but at the moment opensearch does not support the use of phrase.title
-            '#markup' => l(check_plain($entity->serieTitle), 'search/ting/' . variable_get('ting_admin_register_serie_title', 'dc.title') . '=' . drupal_strtolower($entity->serieTitle), array('attributes' => array('class' => array('series')))),
+            '#markup' => l(check_plain($entity->serieTitle), 'search/ting/' . variable_get('ting_admin_register_serie_title', 'dc.title') . '="' . drupal_strtolower($entity->serieTitle) . '"', array('attributes' => array('class' => array('series')))),
           );
         }
         break;
@@ -349,7 +349,7 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
       case 'ting_author_default':
         $creators = array();
         foreach ($entity->creators as $i => $creator) {
-          $creators[] = l($creator, 'search/ting/dc.creator=' . $creator, array('attributes' => array('class' => array('author'))));
+          $creators[] = l($creator, 'search/ting/dc.creator="' . $creator . '"', array('attributes' => array('class' => array('author'))));
         }
         $markup_string = '';
         if (count($creators)) {
@@ -377,7 +377,7 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
         if (count($entity->subjects) == TRUE) {
           $subjects = array();
           foreach ($entity->subjects as $subject) {
-            $subjects[] = l($subject, 'search/ting/dc.subject=' . $subject, array('attributes' => array('class' => array('subject'))));
+            $subjects[] = l($subject, 'search/ting/dc.subject="' . $subject . '"', array('attributes' => array('class' => array('subject'))));
           }
           $element[$delta] = array(
             '#markup' => implode(' ', $subjects),
