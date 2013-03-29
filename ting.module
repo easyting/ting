@@ -224,7 +224,7 @@ function ting_block_info() {
  */
 function ting_get_relations($ting_entity) {
   $relations = array();
-  foreach ($ting_entity->relations as $k => $relation ) {
+  foreach ($ting_entity->relations as $k => $relation) {
     // @todo
     // Maybe a more graceful implementation, using BE.
     if ($relation->type == 'dbcaddi:hasOpenUrl' || $relation->type == 'dbcaddi:hasOnlineAccess') {
@@ -234,10 +234,10 @@ function ting_get_relations($ting_entity) {
   }
 
   // get references from ting_reference
-  if ( module_exists('ting_reference') ) {
+  if (module_exists('ting_reference')) {
     $refs = module_invoke('ting_reference', 'get_relations', 'ting_object', $ting_entity);
-    if ( !empty($refs) ) {
-      foreach ( $refs as $ref ) {
+    if (!empty($refs)) {
+      foreach ($refs as $ref) {
         $relations[$ref->relation_type][] = $ref;
       }
     }
@@ -253,7 +253,7 @@ function ting_block_view($delta = '') {
   switch ($delta) {
     case 'ting_relation_anchors':
       $items = array();
-      if ( $object = menu_get_object('ting_object', 2) ) {
+      if ($object = menu_get_object('ting_object', 2)) {
         $relations = ting_get_relations($object);
         $relation_types = module_invoke_all('anchor_info');
         $block['subject'] = array(
@@ -264,13 +264,12 @@ function ting_block_view($delta = '') {
         $block['subject'] = render($block['subject']);
 
         if (is_array($relations) && count($relations) > 0) {
-          foreach ( $relations as $key => $relation ) {
-            if ( isset($relation_types[$key]) ) {
+          foreach ($relations as $key => $relation) {
+            if (isset($relation_types[$key])) {
               $items[] = l($relation_types[$key] . ' (' . count($relation) . ') ', '#' . $key, array('external' => TRUE));
             }
           }
-          $block['content'] =
-            array(
+          $block['content'] = array(
             '#theme' => 'item_list',
             '#items' => $items,
           );
@@ -296,8 +295,7 @@ function ting_block_view($delta = '') {
       }
       break;
     case 'ting_object_types':
-      if (($object = menu_get_object('ting_object', 2)) &&
-        ($collection = ting_collection_load($object->id))) {
+      if (($object = menu_get_object('ting_object', 2)) && ($collection = ting_collection_load($object->id))) {
         $block['subject'] = array(
           '#markup' => t('Other materialtypes'),
           '#prefix' => '<div class="ting-object-types-header">',
@@ -494,7 +492,7 @@ function ting_ding_entity_is($object, $class) {
   elseif ($class == 'periodical') {
     // @todo make this configurable.
     // @todo also make sure that availability information isn't displayed
-//   on the object
+    //   on the object
     return in_array(drupal_strtolower($object->type), array('tidsskrift', 'periodikum', 'årbog'));
   }
 }
@@ -753,7 +751,7 @@ function ting_boost_field_element_process($element, $form_state) {
 }
 
 function boost_weight_validate($element, &$form_state) {
-  if ( !empty($element['#value']) && ($element['#value'] != (string) (int) $element['#value']) ) {
+  if (!empty($element['#value']) && ($element['#value'] != (string) (int) $element['#value'])) {
     form_error($element, t('Boost weight is an integer.'));
   }
 }
