@@ -11,6 +11,12 @@
 function template_preprocess_ting_object(&$variables) {
   $variables['object'] = $variables['elements']['#object'];
 
+  // Set 'h1' title for collection page.
+  if ($variables['id'] == 1) {
+    $variables['elements']['group_collection_object']['ting_title'][0]['#prefix'] = '<h1>';
+    $variables['elements']['group_collection_object']['ting_title'][0]['#sufix'] = '</h1>';
+  }
+
   $variables['page'] = $variables['elements']['#view_mode'] == 'full';
   $variables['classes_array'][] = drupal_html_class('view-mode-' . $variables['elements']['#view_mode']);
   // Helpful $content variable for templates.
