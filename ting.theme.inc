@@ -39,6 +39,14 @@ function template_preprocess_ting_object(&$variables) {
       $variables['object']->date,
     ));
   }
+
+  // Remove fieldset 'id' attribute.
+  if (!empty($variables['content']['group_collection_object']['#id'])) {
+    unset($variables['content']['group_collection_object']['#id']);
+  }
+  if (!empty($variables['content']['group_collection_list']['#id'])) {
+    unset($variables['content']['group_collection_list']['#id']);
+  }
 }
 
 /**

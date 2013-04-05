@@ -10,7 +10,10 @@
  * - $content: Render array of content.
  */
 $class = isset($object->entities) && count($object->entities) > 1 ? 'ding-entity-collection' : 'ding-entity';
+
+// Dirty hack to prevent duplicate 'class' attribute.
+$attributes = str_replace('class="', 'class="clearfix type-' . $class . ' ', $attributes);
 ?>
-<div class="<?php print $classes; ?> clearfix type-<?php print $class;?>"<?php print $attributes; ?>>
-    <?php echo render($content); ?>
+<div<?php print $attributes; ?>>
+  <?php echo render($content); ?>
 </div>
