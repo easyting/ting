@@ -30,6 +30,14 @@ function template_preprocess_ting_object(&$variables) {
       unset($variables['content']['ting_primary_object'][0]['ding_entity_buttons']);
     }
   }
+
+  // Remove fieldset 'id' attribute.
+  if (!empty($variables['content']['group_collection_object']['#id'])) {
+    unset($variables['content']['group_collection_object']['#id']);
+  }
+  if (!empty($variables['content']['group_collection_list']['#id'])) {
+    unset($variables['content']['group_collection_list']['#id']);
+  }
 }
 
 /**

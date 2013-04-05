@@ -923,10 +923,13 @@ function _ting_fetch_well_sources() {
 }
 /**
  * Get anchor name from collection type.
+ *
  * @param string $type
+ *   Name of the anchor.
+ * @return string
+ *   HTML safe name.
  */
-function _ting_anchor_name($type)
-{
+function _ting_anchor_name($type) {
   $name = str_replace(array('(', ')'), '', $type);
   $name = str_replace(' ', '-', $name);
   $name = strtolower($name);
