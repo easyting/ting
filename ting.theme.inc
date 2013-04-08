@@ -12,7 +12,6 @@ function template_preprocess_ting_object(&$variables) {
   $variables['object'] = $variables['elements']['#object'];
 
   $variables['page'] = $variables['elements']['#view_mode'] == 'full';
-  $variables['classes_array'][] = drupal_html_class('view-mode-' . $variables['elements']['#view_mode']);
   // Helpful $content variable for templates.
   foreach (element_children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
@@ -24,8 +23,14 @@ function template_preprocess_ting_object(&$variables) {
     }
   }
 
+  // Set entity 'class'.
+  $class = 'ding-entity';
+
   // Disable entity buttons for collection items.
   if (is_object($variables['object']) && $variables['object'] instanceof TingCollection) {
+    // Set collection 'class'.
+    $class = 'ding-entity-collection';
+
     if (count($variables['object']->getEntities()) > 1) {
       unset($variables['content']['ting_primary_object'][0]['ding_entity_buttons']);
     }
@@ -47,6 +52,16 @@ function template_preprocess_ting_object(&$variables) {
   if (!empty($variables['content']['group_collection_list']['#id'])) {
     unset($variables['content']['group_collection_list']['#id']);
   }
+  if (!empty($variables['content']['group_content']['#id'])) {
+    unset($variables['content']['group_content']['#id']);
+  }
+
+  // Set additional classes.
+  $variables['classes_array'] = array_merge($variables['classes_array'], array(
+    'clearfix',
+    'type-' . $class,
+    drupal_html_class('view-mode-' . $variables['elements']['#view_mode']),
+  ));
 }
 
 /**
