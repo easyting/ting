@@ -70,8 +70,8 @@ class TingEntity extends DingEntity {
 
   function getIsPartOf() {
     $this->isPartOf = array();
-    if ( !empty($this->reply->record['dcterms:isPartOf']) ) {
-      foreach ($this->reply->record['dcterms:isPartOf'] as $type => $dcterms_ispartof ) {
+    if (!empty($this->reply->record['dcterms:isPartOf'])) {
+      foreach ($this->reply->record['dcterms:isPartOf'] as $type => $dcterms_ispartof) {
         if ( $type != 'oss:sort' ) {
           $this->isPartOf = array_merge($this->isPartOf, $dcterms_ispartof);
         }
@@ -83,9 +83,9 @@ class TingEntity extends DingEntity {
   // pjo 26-09-11 ; getmethod contributor
   function getContributors() {
     $this->contributors = array();
-    if ( !empty($this->reply->record['dc:contributor']) ) {
-      foreach ($this->reply->record['dc:contributor'] as $type => $dc_contributor ) {
-        if ( $type != 'oss:sort' ) {
+    if (!empty($this->reply->record['dc:contributor'])) {
+      foreach ($this->reply->record['dc:contributor'] as $type => $dc_contributor) {
+        if ($type != 'oss:sort') {
           $this->contributors = array_merge($this->contributors, $dc_contributor);
         }
       }
@@ -153,9 +153,9 @@ class TingEntity extends DingEntity {
 
   function getRelations() {
     // If relations are not set; do another request to get relations
-    if ( !isset($this->reply->relationsData) ) {
+    if (!isset($this->reply->relationsData)) {
       $tingClientObject = ting_get_object_request($this->ding_entity_id);
-      if ( isset($tingClientObject->relationsData) ) {
+      if (isset($tingClientObject->relationsData)) {
         $this->reply->relationsData = $tingClientObject->relationsData;
       }
     }
@@ -311,7 +311,7 @@ class TingCollection extends DingEntityCollection {
   function getTypes_count() {
     $types = array();
     foreach ($this->entities as $object) {
-      if ( !isset($types[$object->type] ) ) {
+      if (!isset($types[$object->type])) {
         $types[$object->type] = 1;
       }
       else {

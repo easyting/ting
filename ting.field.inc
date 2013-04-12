@@ -282,7 +282,7 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
 
     foreach ($entity->types as $type) {
       $element[0][$type] = array(
-        '#prefix' => '<h2>' . $type . '</h2><a name="' . $type . '"></a>',
+        '#prefix' => '<h2>' . $type . '</h2><span id="' . _ting_anchor_name($type) . '"></span>',
       );
     }
     foreach ($entities as $sub_entity) {
@@ -303,11 +303,11 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
          */
         $type = 'ting_object';
         if ($display['settings']['link_type'] == 'collection') {
-//   // Check if the cache contains an collection for this id.
-//   $x = ting_cache_get($entity->id);
-//   if ($x instanceof TingClientObjectCollection) {
+        //   // Check if the cache contains an collection for this id.
+        //   $x = ting_cache_get($entity->id);
+        //   if ($x instanceof TingClientObjectCollection) {
           $type = 'ting_collection';
-//   }
+        //   }
         }
         if ($display['settings']['link_type'] != 'none') {
           $url = entity_uri($type, $entity);
@@ -356,8 +356,7 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
           if ($entity->date != '') {
             $markup_string = t('By !author_link (@year)', array(
               '!author_link' => implode(', ', $creators),
-              '@year' => $entity->date, // So wrong, but appears to
-              // be the way the data is.
+              '@year' => $entity->date, // So wrong, but appears to be the way the data is.
             ));
           }
           else {

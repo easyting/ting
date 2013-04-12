@@ -187,7 +187,15 @@ function ting_do_search($query, $page = 1, $results_per_page = 10, $options = ar
     }
   }
 
-  $request->setFacets((isset($options['facets'])) ? $options['facets'] : array('facet.subject', 'facet.creator', 'facet.type', 'facet.category', 'facet.language', 'facet.date', 'facet.acSource'));
+  $request->setFacets((isset($options['facets'])) ? $options['facets'] : array(
+    'facet.subject',
+    'facet.creator',
+    'facet.type',
+    'facet.category',
+    'facet.language',
+    'facet.date',
+    'facet.acSource',
+  ));
   $request->setNumFacets((isset($options['numFacets'])) ? $options['numFacets'] : ((sizeof($request->getFacets()) == 0) ? 0 : 10));
   if (isset($options['sort']) && $options['sort']) {
     $request->setSort($options['sort']);
