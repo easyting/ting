@@ -24,6 +24,7 @@ function ting_admin_ting_settings($form_state) {
     '#type' => 'textfield',
     '#title' => t('Library code'),
     '#description' => t('The 6-digit code representing the library organization'),
+    '#required' => TRUE,
     '#default_value' => variable_get('ting_agency', ''),
   );
 
@@ -39,7 +40,6 @@ function ting_admin_ting_settings($form_state) {
     '#type' => 'textfield',
     '#title' => t('Scan service URL'),
     '#description' => t('URL to the Ting scan webservice, e.g. http://openscan.addi.dk/1.7/'),
-    '#required' => TRUE,
     '#default_value' => variable_get('ting_scan_url', ''),
   );
 
@@ -47,7 +47,6 @@ function ting_admin_ting_settings($form_state) {
     '#type' => 'textfield',
     '#title' => t('Spell service URL'),
     '#description' => t('URL to the Ting spell webservice, e.g. http://openspell.addi.dk/1.2/'),
-    '#required' => TRUE,
     '#default_value' => variable_get('ting_spell_url', ''),
   );
 
@@ -55,7 +54,6 @@ function ting_admin_ting_settings($form_state) {
     '#type' => 'textfield',
     '#title' => t('Recommendation service URL'),
     '#description' => t('URL to the Ting recommendation webservice (Andre der har lånt...) , e.g. http://openadhl.addi.dk/1.1/'),
-    '#required' => TRUE,
     '#default_value' => variable_get('ting_recommendation_url', ''),
   );
 
@@ -99,6 +97,7 @@ function ting_admin_ting_settings($form_state) {
     '#type' => 'textfield',
     '#title' => t('Search profile'),
     '#description' => t('Profile name, used for filtering the search based on settings from vip.dbc.dk.'),
+    '#required' => TRUE,
     '#default_value' => variable_get('ting_search_profile', ''),
   );
 

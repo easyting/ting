@@ -170,7 +170,6 @@ function ting_get_objects($ids) {
  *    The search result
  */
 function ting_do_search($query, $page = 1, $results_per_page = 10, $options = array()) {
-
   $request = ting_get_request_factory()->getSearchRequest();
   $request->setQuery($query);
   if ($agency = variable_get('ting_agency', FALSE)) {
@@ -407,6 +406,12 @@ function ting_cache_set($id, $value) {
  *  An array of TingClientObjectRecommendation objects.
  */
 function ting_get_object_recommendations($isbn, $numResults = 10) {
+  $recommendation_url = ting_get_request_factory()->getRequestUrl('recommendation');
+
+  if (empty($recommendation_url)) {
+    return FALSE;
+  }
+
   $request = ting_get_request_factory()->getObjectRecommendationRequest();
   $request->setIsbn($isbn);
   $request->setNumResults($numResults);
@@ -432,16 +437,14 @@ function ting_get_request_factory() {
     );
 
     // TODO: This should probably be rethought.
-    if (module_exists('ting_infomedia') && variable_get('ting_infomedia_url', FALSE)) {
+    $infomedia_url = variable_get('ting_infomedia_url', FALSE);
+    if (module_exists('ting_infomedia') && !empty($infomedia_url)) {
       $url_variables['infomedia'] = 'ting_infomedia_url';
     }
 
     $urls = array();
     foreach ($url_variables as $name => $setting) {
       $urls[$name] = variable_get($setting, FALSE);
-      if (!$urls[$name]) {
-        throw new TingClientException('No Ting webservice url defined for ' . $name);
-      }
     }
 
     $request_factory = new TingClientRequestFactory($urls);
@@ -503,11 +506,18 @@ function ting_get_client() {
  * @return TingClientScanResult
  */
 function ting_do_scan($query, $phrase = 'anyIndexes', $num_results = 10) {
+  $scan_url = ting_get_request_factory()->getRequestUrl('scan');
+
+  if (empty($scan_url)) {
+    return FALSE;
+  }
+
   $request = ting_get_request_factory()->getScanRequest();
   $request->setField('phrase.' . $phrase);
   $request->setLower($query);
   $request = ting_add_agency($request);
   $request->setNumResults($num_results);
+
   return ting_execute($request);
 }
 
@@ -528,6 +538,12 @@ function ting_add_agency(TingClientScanRequest $request) {
  * @return array An array of TingClientSpellSuggestion objects
  */
 function ting_get_spell_suggestions($word, $num_results = 10) {
+  $spell_url = ting_get_request_factory()->getRequestUrl('spell');
+
+  if (empty($spell_url)) {
+    return FALSE;
+  }
+
   $request = ting_get_request_factory()->getSpellRequest();
   $request->setWord($word);
   $request->setNumResults($num_results);
