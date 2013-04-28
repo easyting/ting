@@ -170,7 +170,6 @@ function ting_get_objects($ids) {
  *    The search result
  */
 function ting_do_search($query, $page = 1, $results_per_page = 10, $options = array()) {
-
   $request = ting_get_request_factory()->getSearchRequest();
   $request->setQuery($query);
   if ($agency = variable_get('ting_agency', FALSE)) {
@@ -209,7 +208,7 @@ function ting_do_search($query, $page = 1, $results_per_page = 10, $options = ar
   }
 
   // Apply custom ranking if enabled.
-  if (variable_get('ting_ranking_custom', FALSE)) {
+  if (variable_get('ting_ranking_custom', FALSE) && variable_get('ting_ranking_fields', array()) && !isset($options['sort'])) {
     $fields = array();
     foreach (variable_get('ting_ranking_fields', array()) as $field) {
       $fields[] = array(
@@ -281,7 +280,8 @@ function ting_do_search($query, $page = 1, $results_per_page = 10, $options = ar
  *
  * Executes the request and caches sub-objects.
  *
- * @param $request the request.
+ * @param object $request
+ *   The request.
  */
 function ting_execute_cache($request) {
   $calls = &drupal_static(__FUNCTION__);
@@ -352,6 +352,7 @@ function ting_execute_cache($request) {
  */
 function ting_cache_get($id, $collection = FALSE) {
   $cid = 'ting-' . ($collection ? 'collection' : 'object') . ':' . $id;
+
   if ($ttl = variable_get('ting_cache_lifetime', TING_DEFAULT_CACHE_LIFETIME)) {
     $cache = cache_get($cid);
     if ($cache && ($cache->expire > REQUEST_TIME)) {
@@ -407,6 +408,12 @@ function ting_cache_set($id, $value) {
  *  An array of TingClientObjectRecommendation objects.
  */
 function ting_get_object_recommendations($isbn, $numResults = 10) {
+  $recommendation_url = ting_get_request_factory()->getRequestUrl('recommendation');
+
+  if (empty($recommendation_url)) {
+    return FALSE;
+  }
+
   $request = ting_get_request_factory()->getObjectRecommendationRequest();
   $request->setIsbn($isbn);
   $request->setNumResults($numResults);
@@ -432,16 +439,14 @@ function ting_get_request_factory() {
     );
 
     // TODO: This should probably be rethought.
-    if (module_exists('ting_infomedia') && variable_get('ting_infomedia_url', FALSE)) {
+    $infomedia_url = variable_get('ting_infomedia_url', FALSE);
+    if (module_exists('ting_infomedia') && !empty($infomedia_url)) {
       $url_variables['infomedia'] = 'ting_infomedia_url';
     }
 
     $urls = array();
     foreach ($url_variables as $name => $setting) {
       $urls[$name] = variable_get($setting, FALSE);
-      if (!$urls[$name]) {
-        throw new TingClientException('No Ting webservice url defined for ' . $name);
-      }
     }
 
     $request_factory = new TingClientRequestFactory($urls);
@@ -457,17 +462,38 @@ function ting_add_relations($request, $type = 'full') {
 }
 
 /**
- * Perform a request against Ting and perform error handling if necessary
+ * Perform a request against Ting and perform error handling if necessary.
  *
- * @param $request The request
- * @return mixed Result of the request or false if an error occurs
+ * @param object $request
+ *   The request.
+ *
+ * @return mixed
+ *   Result of the request or false if an error occurs.
  */
 function ting_execute($request) {
+  // Get additional parameters from other modules.
+  $params = module_invoke_all('ting_pre_execute', $request);
+  if (!empty($params)) {
+    $request->setParameters($params);
+  }
+
   try {
     timer_start('ting');
     $res = ting_get_client()->execute($request);
     timer_stop('ting');
-    return $res;
+
+    $response = $request->parseResponse($res);
+
+    // Pass parsed results to other modules.
+    // @todo Check if it works for collection of items.
+    $props = module_invoke_all('ting_post_execute', $request, $response, $res);
+    if (!empty($props)) {
+      foreach ($props as $property => $value) {
+        $response->{$property} = $value;
+      }
+    }
+
+    return $response;
   }
   catch (TingClientException $e) {
     timer_stop('ting');
@@ -503,11 +529,18 @@ function ting_get_client() {
  * @return TingClientScanResult
  */
 function ting_do_scan($query, $phrase = 'anyIndexes', $num_results = 10) {
+  $scan_url = ting_get_request_factory()->getRequestUrl('scan');
+
+  if (empty($scan_url)) {
+    return FALSE;
+  }
+
   $request = ting_get_request_factory()->getScanRequest();
   $request->setField('phrase.' . $phrase);
   $request->setLower($query);
   $request = ting_add_agency($request);
   $request->setNumResults($num_results);
+
   return ting_execute($request);
 }
 
@@ -528,6 +561,12 @@ function ting_add_agency(TingClientScanRequest $request) {
  * @return array An array of TingClientSpellSuggestion objects
  */
 function ting_get_spell_suggestions($word, $num_results = 10) {
+  $spell_url = ting_get_request_factory()->getRequestUrl('spell');
+
+  if (empty($spell_url)) {
+    return FALSE;
+  }
+
   $request = ting_get_request_factory()->getSpellRequest();
   $request->setWord($word);
   $request->setNumResults($num_results);

@@ -12,7 +12,7 @@ function template_preprocess_ting_object(&$variables) {
   $variables['object'] = $variables['elements']['#object'];
 
   // Set 'h1' title for collection page.
-  if ($variables['id'] == 1) {
+  if ($variables['id'] == 1 && $variables['elements']['#view_mode'] == 'collection_primary') {
     $variables['elements']['group_collection_object']['ting_title'][0]['#prefix'] = '<h1>';
     $variables['elements']['group_collection_object']['ting_title'][0]['#sufix'] = '</h1>';
   }
