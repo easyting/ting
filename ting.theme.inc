@@ -35,9 +35,8 @@ function template_preprocess_ting_object(&$variables) {
   // Disable entity buttons for collection items.
   if (is_object($variables['object']) && $variables['object'] instanceof TingCollection) {
     // Set collection 'class'.
-    $class = 'ding-entity-collection';
-
     if (count($variables['object']->getEntities()) > 1) {
+      $class = 'ding-entity-collection';
       unset($variables['content']['ting_primary_object'][0]['ding_entity_buttons']);
     }
   }
