@@ -932,7 +932,7 @@ function _ting_fetch_well_sources() {
 function _ting_anchor_name($type) {
   $name = str_replace(array('(', ')'), '', $type);
   $name = str_replace(' ', '-', $name);
-  $name = str_replace(':', '_', $name);
+  $name = str_replace(':', '', $name);
   $name = strtolower($name);
   return $name;
 }
