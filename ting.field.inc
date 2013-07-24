@@ -348,8 +348,17 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
         break;
       case 'ting_author_default':
         $creators = array();
-        foreach ($entity->creators as $i => $creator) {
-          $creators[] = l($creator, 'search/ting/dc.creator="' . $creator . '"', array('attributes' => array('class' => array('author'))));
+        if (!isset($entity->reply->record['dc:creator']['oss:sort'])) {
+          foreach ($entity->creators as $i => $creator) {
+            $creators[] = l($creator, 'search/ting/dc.creator="' . $creator . '"', array('attributes' => array('class' => array('author'))));
+          }
+        }
+        else {
+          // Place dc.creator on url according to oss:sort field.
+          // Use corresponing creator element for name. If this does not exist use oss:sort as name.
+          foreach ($entity->reply->record['dc:creator']['oss:sort'] as $i => $creator) {
+            $creators[] = l(isset($entity->creators[$i]) ? $entity->creators[$i] : $creator, 'search/ting/dc.creator="' . $creator . '"', array('attributes' => array('class' => array('author'))));
+          }
         }
         $markup_string = '';
         if (count($creators)) {
