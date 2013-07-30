@@ -11,10 +11,20 @@
 function template_preprocess_ting_object(&$variables) {
   $variables['object'] = $variables['elements']['#object'];
 
-  // Set 'h1' title for collection page.
+  // Trigger for collection.
   if ($variables['id'] == 1 && $variables['elements']['#view_mode'] == 'collection_primary') {
+    // Set 'h1' title for collection page.
     $variables['elements']['group_collection_object']['ting_title'][0]['#prefix'] = '<h1>';
     $variables['elements']['group_collection_object']['ting_title'][0]['#sufix'] = '</h1>';
+
+    // Insert reservation button.
+    if (variable_get('ting_reservable_collections', FALSE)) {
+      $variables['elements']['group_collection_object']['buttons']['#weight'] = 100;
+      $variables['elements']['group_collection_object']['buttons']['#markup'] = '<div class="field-type-ding-entity-buttons">';
+      $link = url('reservation/nojs/collection/' . $variables['object']->ding_entity_id);
+      $variables['elements']['group_collection_object']['buttons']['#markup'] .= '<div class="reservation-link-ajax"><a href="' . $link . '" class="use-ajax">' . t('Reserve') . '</a></div>';
+      $variables['elements']['group_collection_object']['buttons']['#markup'] .= '</div><span id="collection_items"></span>';
+    }
   }
 
   $variables['page'] = $variables['elements']['#view_mode'] == 'full';
