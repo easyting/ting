@@ -21,7 +21,7 @@ function template_preprocess_ting_object(&$variables) {
     if (variable_get('ting_reservable_collections', FALSE)) {
       $variables['elements']['group_collection_object']['buttons']['#weight'] = 100;
       $variables['elements']['group_collection_object']['buttons']['#markup'] = '<div class="field-type-ding-entity-buttons">';
-      $link = url('reservation/nojs/collection/' . $variables['object']->ding_entity_id);
+      $link = url('ting/collection/' . $variables['object']->ding_entity_id . '/popup/nojs');
       $variables['elements']['group_collection_object']['buttons']['#markup'] .= '<div class="reservation-link-ajax"><a href="' . $link . '" class="use-ajax">' . t('Reserve') . '</a></div>';
       $variables['elements']['group_collection_object']['buttons']['#markup'] .= '</div><span id="collection_items"></span>';
     }
