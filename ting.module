@@ -505,7 +505,7 @@ function ting_ding_entity_is($object, $class) {
  */
 function ting_page_alter(&$page) {
   $calls = &drupal_static('ting_execute_cache');
-  if (sizeof($calls) > 5) {
+  if (sizeof($calls) > 50) {
     $calls_str = array();
     foreach ($calls as $call) {
       $calls_str[] = print_r($calls, TRUE);
