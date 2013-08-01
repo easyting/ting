@@ -504,7 +504,14 @@ function ting_admin_reservable_settings($form_state) {
     '#type' => 'fieldset',
     '#title' => t('Reservation buttons'),
     '#tree' => FALSE,
-    '#description' => t("A Ting object will get a reservation button, if it's source and type is <em>both</em> selected ."),
+    '#description' => t("A Ting object will get a reservation button, if it's source and type is <em>both</em> selected."),
+  );
+
+  $form['ting_reservable']['ting_reservable_collections'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Collections'),
+    '#options' => drupal_map_assoc(array(t('Yes, show a Reserve-button on collections.'))),
+    '#default_value' => variable_get('ting_reservable_collections', array()),
   );
 
   $form['ting_reservable']['ting_reservable_sources'] = array(

@@ -66,6 +66,17 @@ function ting_menu() {
     'type' => MENU_CALLBACK | MENU_VISIBLE_IN_BREADCRUMB,
   );
 
+  $items['ting/collection/%ting_collection/popup/nojs'] = array(
+    'page callback' => 'ting_collection_ajax',
+    'page arguments' => array(4, 2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['ting/collection/%ting_collection/popup/ajax'] = array(
+    'delivery callback' => 'ajax_deliver',
+  ) + $items['ting/collection/%ting_collection/popup/nojs'];
+
   $items['admin/config/ting'] = array(
     'title' => 'Ting',
     'description' => 'Manage Ting integration settings.',
@@ -537,8 +548,8 @@ function ting_collection_page_view($object) {
 
 /**
  * Page title callback.
- * 
- * Strips chars '<' and '>' in order to avoid HTML injections. 
+ *
+ * Strips chars '<' and '>' in order to avoid HTML injections.
  */
 function ting_page_title($object) {
   return str_replace('&amp;', '&', htmlspecialchars($object->title, ENT_NOQUOTES, 'UTF-8'));
@@ -807,6 +818,37 @@ function ting_ranking_field_element_process($element, $form_state) {
  */
 function theme_ting_ranking_field($element) {
   return theme('form_element', $element);
+}
+
+/**
+ * Menu entry callback.
+ *
+ * @param TingCollection $collection
+ *   Ting collection.
+ * @param $type
+ *   Type of callback.
+ *
+ * @return
+ *   Array of ajax commands.
+ */
+function ting_collection_ajax($type, TingCollection $collection) {
+  $commands = array();
+  $ajax = ($type == 'ajax');
+
+  if ($ajax) {
+    $view = ting_collection_view($collection, 'popup');
+    $output = render($view);
+    $commands[] = ajax_command_ding_popup('collection_reservation', t('Reserve'), $output);
+  }
+  else {
+    // Simple redirect with anchor. Better solution is needed here.
+    drupal_goto('ting/collection/' . $collection->id, array('fragment' => 'collection_items'));
+  }
+
+  return array(
+    '#type' => 'ajax',
+    '#commands' => $commands
+  );
 }
 
 /**
