@@ -311,7 +311,7 @@ function ting_block_view($delta = '') {
 
         $block['content'] = array(
           '#theme' => 'item_list',
-          '#items' => count($collection) > 1 ? $items : array(),
+          '#items' => count($items) > 1 ? $items : array(),
         );
       }
       break;
