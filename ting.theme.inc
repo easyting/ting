@@ -48,6 +48,15 @@ function template_preprocess_ting_object(&$variables) {
     if (count($variables['object']->getEntities()) > 1) {
       $class = 'ding-entity-collection';
       unset($variables['content']['ting_primary_object'][0]['ding_entity_buttons']);
+
+      // Insert reservation button.
+      if (variable_get('ting_reservable_collections', FALSE) && $variables['elements']['#view_mode'] != 'popup') {
+        $variables['content']['ting_primary_object'][0]['buttons']['#weight'] = 100;
+        $variables['content']['ting_primary_object'][0]['buttons']['#markup'] = '<div class="field-type-ding-entity-buttons">';
+        $link = url('ting/collection/' . $variables['object']->ding_entity_id . '/popup/nojs');
+        $variables['content']['ting_primary_object'][0]['buttons']['#markup'] .= '<div class="reservation-link-ajax"><a href="' . $link . '" class="use-ajax">' . t('Reserve') . '</a></div>';
+        $variables['content']['ting_primary_object'][0]['buttons']['#markup'] .= '</div><span id="collection_items"></span>';
+      }
     }
   }
 
