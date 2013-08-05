@@ -22,7 +22,7 @@ function template_preprocess_ting_object(&$variables) {
       $variables['elements']['group_collection_object']['buttons']['#weight'] = 100;
       $variables['elements']['group_collection_object']['buttons']['#markup'] = '<div class="field-type-ding-entity-buttons">';
       $link = url('ting/collection/' . $variables['object']->ding_entity_id . '/popup/nojs');
-      $variables['elements']['group_collection_object']['buttons']['#markup'] .= '<div class="reservation-link-ajax"><a href="' . $link . '" class="use-ajax">' . t('Reserve') . '</a></div>';
+      $variables['elements']['group_collection_object']['buttons']['#markup'] .= '<div class="reservation-link-ajax hidden"><a href="' . $link . '" class="use-ajax btn reservation collection">' . t('Reserve') . '</a></div>';
       $variables['elements']['group_collection_object']['buttons']['#markup'] .= '</div><span id="collection_items"></span>';
     }
   }
@@ -51,10 +51,15 @@ function template_preprocess_ting_object(&$variables) {
 
       // Insert reservation button.
       if (variable_get('ting_reservable_collections', FALSE) && $variables['elements']['#view_mode'] != 'popup') {
+        $local_ids = array();
+        foreach($variables['object']->entities as $entity) {
+          $local_ids[] = 'for-item-' . $entity->localId;
+        }
+
         $variables['content']['ting_primary_object'][0]['buttons']['#weight'] = 100;
         $variables['content']['ting_primary_object'][0]['buttons']['#markup'] = '<div class="field-type-ding-entity-buttons">';
         $link = url('ting/collection/' . $variables['object']->ding_entity_id . '/popup/nojs');
-        $variables['content']['ting_primary_object'][0]['buttons']['#markup'] .= '<div class="reservation-link-ajax"><a href="' . $link . '" class="use-ajax">' . t('Reserve') . '</a></div>';
+        $variables['content']['ting_primary_object'][0]['buttons']['#markup'] .= '<div class="reservation-link-ajax hidden ' . implode(' ', $local_ids) . '"><a href="' . $link . '" class="use-ajax btn reservation collection">' . t('Reserve') . '</a></div>';
         $variables['content']['ting_primary_object'][0]['buttons']['#markup'] .= '</div><span id="collection_items"></span>';
       }
     }
