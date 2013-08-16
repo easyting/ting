@@ -343,10 +343,12 @@ function ting_block_view($delta = '') {
           unset($items[$object->reply->record['dc:type']['dkdcplus:BibDK-Type'][0]]);
         }
 
-        $block['content'] = array(
-          '#theme' => 'item_list',
-          '#items' => count($items) > 0 ? $items : array(),
-        );
+        if (count($items) > 0) {
+          $block['content'] = array(
+            '#theme' => 'item_list',
+            '#items' => $items,
+          );
+        }
       }
       break;
   }
