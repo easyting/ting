@@ -306,7 +306,7 @@ function ting_block_view($delta = '') {
       }
       break;
     case 'ting_object_types':
-      if (($object = menu_get_object('ting_object', 2)) && ($collection = ting_collection_load($object->id))) {
+      if (($object = menu_get_object('ting_object', 2)) && ($collection = ting_collection_load($object->id)) && (count($collection->types) > 0)) {
         $block['subject'] = array(
           '#markup' => t('Other materialtypes'),
           '#prefix' => '<span class="ting-object-types-header">',
@@ -315,14 +315,37 @@ function ting_block_view($delta = '') {
         $block['subject'] = render($block['subject']);
         $items = array();
         foreach ($collection->types as $type) {
-          $uri = entity_uri('ting_collection', $collection);
-          $uri['options']['fragment'] = _ting_anchor_name($type);
-          $items[] = l($type . ' (' . $collection->types_count[$type] . ')', $uri['path'], $uri['options']);
+          $uri = '';
+
+          // Check whether this is object or collection, in order to
+          //   create different URLs for objects and collections.
+          if ($collection->types_count[$type] == 1) {
+            // Discover ting object with the same type in order to fetch its id for the URL.
+            foreach ($collection->entities as $entity) {
+              // Check if the type of the object is the same of the entity's.
+              if (isset($entity->reply->record['dc:type']['dkdcplus:BibDK-Type'][0]) && ($entity->reply->record['dc:type']['dkdcplus:BibDK-Type'][0] == $type)) {
+                $uri = entity_uri('ting_object', $entity);
+              }
+            }
+          }
+          else {
+            $uri = entity_uri('ting_collection', $collection);
+            // Generate anchor which is used for the collection page.
+            $uri['options']['fragment'] = _ting_anchor_name($type);
+          }
+          // Add URL only if URI has been constructed previously.
+          if (isset($uri)) {
+            $items[$type] = l($type . ' (' . $collection->types_count[$type] . ')', $uri['path'], $uri['options']);
+          }
+        }
+        // Removing item of the same type with the object, if it only contains a link to the same object and only.
+        if (isset($entity->reply->record['dc:type']['dkdcplus:BibDK-Type'][0]) && ($collection->types_count[$object->reply->record['dc:type']['dkdcplus:BibDK-Type'][0]] <= 1)) {
+          unset($items[$object->reply->record['dc:type']['dkdcplus:BibDK-Type'][0]]);
         }
 
         $block['content'] = array(
           '#theme' => 'item_list',
-          '#items' => count($items) > 1 ? $items : array(),
+          '#items' => count($items) > 0 ? $items : array(),
         );
       }
       break;
