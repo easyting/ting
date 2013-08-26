@@ -183,6 +183,11 @@ class TingEntity extends DingEntity {
     return $this->relations;
   }
 
+  function getCreator() {
+    $record = $this->reply->record;
+    return isset($record['dc:creator']['dkdcplus:aut'][0]) ? $record['dc:creator']['dkdcplus:aut'][0] : '';
+  }
+
   function getCreators() {
     $this->creators = array();
     if (!empty($this->reply->record['dc:creator'])) {
