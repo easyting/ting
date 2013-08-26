@@ -619,8 +619,9 @@ function ting_object_view($object, $view_mode = 'full', $langcode = NULL) {
 
   // _field_invoke_multiple gets pissy if the arrays aren't indexed by the
   // local ID.
-  field_attach_prepare_view('ting_object', array($object->tid => $object), $view_mode, $langcode);
-  entity_prepare_view('ting_object', array($object->id => $object), $langcode);
+  $tid = isset($object->tid) ? $object->tid : $object->localId;
+  field_attach_prepare_view('ting_object', array($tid => $object), $view_mode, $langcode);
+  entity_prepare_view('ting_object', array($tid => $object), $langcode);
   $object->content += field_attach_view('ting_object', $object, $view_mode, $langcode);
 
   // Allow modules to make their own additions to the object.
