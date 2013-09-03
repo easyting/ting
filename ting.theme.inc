@@ -53,7 +53,7 @@ function template_preprocess_ting_object(&$variables) {
       if (variable_get('ting_reservable_collections', FALSE) && $variables['elements']['#view_mode'] != 'popup') {
         $local_ids = array();
         foreach($variables['object']->entities as $entity) {
-          $local_ids[] = 'for-item-' . $entity->localId;
+          $local_ids[] = 'for-item-' . $entity->localId . ' ting-object-id-' . $entity->localId;
         }
 
         $variables['content']['ting_primary_object'][0]['buttons']['#weight'] = 100;
