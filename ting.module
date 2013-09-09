@@ -683,7 +683,6 @@ function ting_collection_view($object, $view_mode = 'full', $langcode = NULL) {
   $object->content += field_attach_view('ting_collection', $object, $view_mode, $langcode);
 
   // Allow modules to make their own additions to the collection.
-  module_invoke_all('ding_entity_collection_view', $object, $view_mode, $langcode);
   module_invoke_all('entity_view', $object, 'ting_collection', $view_mode, $langcode);
 
   $build = $object->content;
@@ -696,7 +695,6 @@ function ting_collection_view($object, $view_mode = 'full', $langcode = NULL) {
     '#view_mode' => $view_mode,
   );
 
-  drupal_alter('ting_collection_view', $build);
   return $build;
 }
 
