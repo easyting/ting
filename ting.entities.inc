@@ -268,6 +268,7 @@ class TingCollection extends DingEntityCollection {
   public $types = DingEntityBase::NULL;
   public $types_count = DingEntityBase::NULL;
   public $primary_object = DingEntityBase::NULL;
+  public $reply;
 
   function __construct($id) {
     $this->ding_entity_id = $id;

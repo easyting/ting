@@ -9,6 +9,17 @@
  * Controller class for ting objects.
  */
 class TingObjectController extends DrupalDefaultEntityController {
+  /**
+   * Load entities.
+   *
+   * @param array $ids
+   *   Ting object IDs.
+   * @param array $conditions
+   *   Conditions.
+   *
+   * @return array
+   *   Entities.
+   */
   public function load($ids = array(), $conditions = array()) {
     module_load_include('client.inc', 'ting');
     $queried_entities = array();
@@ -93,12 +104,24 @@ class TingObjectController extends DrupalDefaultEntityController {
     foreach ($queried_entities as $qe) {
       $get_ids[] = $qe->ding_entity_id;
     }
-    if ($get_ids && $load_ids = array_diff($get_ids, $cached_entity_ids)) {
-      $objects = ting_get_objects($load_ids);
+
+    $load_ids = array_diff($get_ids, $cached_entity_ids);
+    // Get from ting_cache first.
+    $to_be_loaded = $load_ids;
+    foreach ($to_be_loaded as $k => $id) {
+      $obj = ting_cache_get($id);
+      if ($obj) {
+        $objects[$id] = $obj;
+        unset($load_ids[$k]);
+      }
+    }
+    unset($to_be_loaded);
+    if (!empty($load_ids)) {
+      $objects += ting_get_objects($load_ids);
     }
 
     // Not known locally. Create a proxy if it exists in the well.
-    if (sizeof($unknown)) {
+    if (count($unknown)) {
       $new_ids = array();
       foreach ($unknown as $ding_entity_id) {
         if (isset($objects[$ding_entity_id])) {
@@ -106,7 +129,7 @@ class TingObjectController extends DrupalDefaultEntityController {
           $ting_object = array(
             'ding_entity_id' => $ding_entity_id,
           );
-          // Start of transaction: the following queries are one atomic operation.
+          // Start of transaction: the following queries are one operation.
           $transaction = db_transaction();
           try {
             drupal_write_record('ting_object', $ting_object);
@@ -123,7 +146,7 @@ class TingObjectController extends DrupalDefaultEntityController {
             $transaction->rollback();
             watchdog_exception('ting_object', $e);
           }
-          // End of transaction, Drupal automatically calls commit (__destruct method).
+          // End of transaction, Drupal automatically calls commit (__destruct).
         }
       }
       if ($new_ids) {
@@ -170,7 +193,7 @@ class TingObjectController extends DrupalDefaultEntityController {
   /**
    * Gets entities from the static cache.
    *
-   * Superclass method doesn't deal with arrays in conditions.
+   * Superclass method does not deal with arrays in conditions.
    */
   protected function cacheGet($ids, $conditions = array()) {
     $entities = array();
@@ -218,10 +241,16 @@ class TingCollectionController implements DrupalEntityControllerInterface {
   /**
    * Constructor: sets basic variables.
    */
-  public function __construct($entityType) {
+  public function __construct($entity_type) {
     $this->entityCache = array();
   }
 
+  /**
+   * Set local cache.
+   *
+   * @param array $entities
+   *   Ting entities.
+   */
   protected function cacheSet($entities) {
     $this->entityCache += $entities;
   }
