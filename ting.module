@@ -542,11 +542,7 @@ function ting_ding_entity_is($object, $class) {
 function ting_page_alter(&$page) {
   $calls = &drupal_static('ting_execute_cache');
   if (sizeof($calls) > 50) {
-    $calls_str = array();
-    foreach ($calls as $call) {
-      $calls_str[] = print_r($calls, TRUE);
-    }
-    watchdog('ting', 'Warning, ting_execute called @x times:<br />"@queries"', array('@x' => sizeof($calls), '@queries' => join('" "', $calls_str)), WATCHDOG_WARNING);
+    watchdog('ting', 'Warning, ting_execute called @x times.', array('@x' => sizeof($calls)), WATCHDOG_WARNING);
     if (function_exists('dpm') && user_access('access devel information')) {
       drupal_set_message(t('Warning, ting_execute called @x times.', array('@x' => sizeof($calls))), 'error');
       dpm($calls, 'ting_execute queries:');
