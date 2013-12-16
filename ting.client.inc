@@ -62,16 +62,18 @@ function ting_get_object($object_id, $collection = FALSE) {
         $request->setProfile($profile);
       }
 
-      $request->setAllObjects(false);
+      $request->setAllObjects(FALSE);
       $object = ting_execute_cache($request);
     }
   }
+
+  $object_id_field = strpos($object_id, ':') !== FALSE ? 'id' : 'localId';
 
   // If not asking for a collection, and the object is, return the
   // sub-object with the same id.
   if (!$collection && isset($object->objects)) {
     foreach ($object->objects as $sub_object) {
-      if ($sub_object->id == $object_id) {
+      if ($sub_object->$object_id_field == $object_id) {
         return $sub_object;
       }
     }
@@ -104,47 +106,13 @@ function ting_get_objects($ids) {
   }
 
   $query = array();
-  foreach ($objects as $id => $object) {
-    if (!isset($object)) {
-      $query[] = 'rec.id=' . $id;
+  $keys = array_keys($objects);
+  foreach ($keys as $id) {
+    if (empty($objects[$id])) {
+      $object = ting_get_object($id);
+      $objects[$id] = $object;
     }
   }
-  // opensearch is limited to 50 results per call, so iterate until all have been fetched.
-  $i = 0;
-  do {
-    // I query is empty, then don't do it.
-    // Not necessary to do in each iteration, but it doesn't hurt much.
-    if (sizeof($query) == 0) {
-      break;
-    }
-
-    $request = ting_get_request_factory()->getSearchRequest();
-    if ($agency = variable_get('ting_agency', FALSE)) {
-      $request->setAgency($agency);
-    }
-    $profile = variable_get('ting_search_profile', '');
-    if (!empty($profile) && method_exists($request, 'setProfile')) {
-      $request->setProfile($profile);
-    }
-    $request->setQuery(join(' OR ', $query));
-    // Do it in steps of 50.
-    $request->setStart($i * 50 + 1);
-    $request->setNumResults(50);
-    $request->setAllObjects(TRUE);
-
-    $result = ting_execute_cache($request);
-
-    if ($result && is_array($result->collections)) {
-      foreach ($result->collections as $collection) {
-        if (is_array($collection->objects) && sizeof($collection->objects)) {
-          foreach ($collection->objects as $object) {
-            $objects[$object->id] = $object;
-          }
-        }
-      }
-    }
-    $i++;
-  } while ($result->more);
   return $objects;
 }
 
