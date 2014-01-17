@@ -306,6 +306,10 @@ function ting_block_view($delta = '') {
       }
       break;
     case 'ting_object_types':
+      $types = reset($collection->types);
+      if (empty($types)) {
+        break;
+      }
       if (($object = menu_get_object('ting_object', 2)) && ($collection = ting_collection_load($object->id)) && (count($collection->types) > 0)) {
         $block['subject'] = array(
           '#markup' => t('Other materialtypes'),
@@ -314,11 +318,11 @@ function ting_block_view($delta = '') {
         );
         $block['subject'] = render($block['subject']);
         $items = array();
-        foreach ($collection->types as $type) {
-          $uri = '';
+        $uri = array();
 
+        foreach ($collection->types as $type) {
           // Check whether this is object or collection, in order to
-          //   create different URLs for objects and collections.
+          // create different URLs for objects and collections.
           if ($collection->types_count[$type] == 1) {
             // Discover ting object with the same type in order to fetch its id for the URL.
             foreach ($collection->entities as $entity) {
