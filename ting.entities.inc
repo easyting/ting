@@ -123,25 +123,43 @@ class TingEntity extends DingEntity {
 
   function getSerieNumber() {
     $serie = $this->splitSerie();
-    // Last part is the number.
-    if (empty($serie[1])) {
-      return FALSE;
+    if (!empty($serie)) {
+      foreach ($serie as $key => $value) {
+        // Last part is the number.
+        if (empty($value[1])) {
+          continue;
+        }
+        $result[$key] = trim($value[1]);
+      }
+      return $result;
     }
-    return $serie[1];
+    return FALSE;
   }
 
   private function splitSerie() {
-    $serie = !empty($this->reply->record['dc:title']['dkdcplus:series'][0]) ? $this->reply->record['dc:title']['dkdcplus:series'][0] : '';
-    return explode(';', $serie);
+    $result = array();
+    $serie = !empty($this->reply->record['dc:title']['dkdcplus:series']) ? $this->reply->record['dc:title']['dkdcplus:series'] : '';
+    if (is_array($serie)) {
+      foreach($serie as $s) {
+        $result[] = explode(';', $s);
+      }
+    }
+    return $result;
   }
 
   function getSerieTitle() {
     $serie = $this->splitSerie();
-    // First part is the title.
-    if (empty($serie[0])) {
-      return FALSE;
+    if (!empty($serie)) {
+      foreach ($serie as $key => $value) {
+        // First part is the title.
+        if (empty($value[0])) {
+          return FALSE;
+        }
+        $result[$key] = trim($value[0]);
+      }
+      return $result;
     }
-    return trim($serie[0]);
+    return FALSE;
   }
 
   function getAbstract() {
