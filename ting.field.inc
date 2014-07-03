@@ -339,8 +339,8 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
           $options = array('attributes' => array('class' => array('series')));
           foreach ($series as $key => $serie) {
             $path = 'search/ting/' . variable_get('ting_admin_register_serie_title', 'dc.title') . '="' . drupal_strtolower($serie) . '"';
-            $serie_number = (isset($entity->serieNumber[$key]) && !empty($entity->serieNumber[$key])) ? ' : ' . check_plain($entity->serieNumber[$key]) . '<br />' : '';
-            $links .= l(check_plain($serie), $path, $options) . $serie_number;
+            $serie_number = (isset($entity->serieNumber[$key]) && !empty($entity->serieNumber[$key])) ? ' : ' . check_plain($entity->serieNumber[$key]) : '';
+            $links .= l(check_plain($serie), $path, $options) . $serie_number . '<br />' ;
           }
           $element[$delta] = array(
             // should use phrase.title instead of dc.title but at the moment opensearch does not support the use of phrase.title
