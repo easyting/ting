@@ -334,10 +334,19 @@ function ting_field_formatter_view($entity_type, $entity, $field, $instance, $la
         );
         break;
       case 'ting_series_default':
-        if ($entity->serieTitle) {
+        $series = $entity->serieTitle;
+        if ($series) {
+          $links = '';
+          $options = array('attributes' => array('class' => array('series')));
+          $dc_title = variable_get('ting_admin_register_serie_title', 'dc.title');
+          foreach ($series as $key => $serie) {
+            $path = 'search/ting/' . $dc_title . '="' . drupal_strtolower($serie) . '"';
+            $serie_number = (isset($entity->serieNumber[$key]) && !empty($entity->serieNumber[$key])) ? ' : ' . $entity->serieNumber[$key] : '';
+            $links .= '<span class="series_number">' . l($serie, $path, $options) . $serie_number . '</span>';
+          }
           $element[$delta] = array(
             // should use phrase.title instead of dc.title but at the moment opensearch does not support the use of phrase.title
-            '#markup' => l(check_plain($entity->serieTitle), 'search/ting/' . variable_get('ting_admin_register_serie_title', 'dc.title') . '="' . drupal_strtolower($entity->serieTitle) . '"', array('attributes' => array('class' => array('series')))) . ' : ' . check_plain($entity->serieNumber),
+            '#markup' => $links,
           );
         }
         break;
